@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id               String             @id @db.Uuid
+  name             String             @unique(map: "category_name_unique") @db.VarChar(30)
+  trivias TriviaOnCategory[]
+}
+
+model Match {
+  id                        String        @id @db.Uuid
+  triviaId                  String        @db.Uuid
+  authorId                  String        @db.Uuid
+  winnerId                  String?       @db.Uuid
+  author User          @relation("Match_authorIdToUser", fields: [authorId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "match_authorid_foreign")
+  trivia                    Trivia        @relation(fields: [triviaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "match_triviaid_foreign")
+  winner User?         @relation("Match_winnerIdToUser", fields: [winnerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "match_winnerid_foreign")
+  scores                MatchScore[]
+  users               UserOnMatch[]
+}
+
+model MatchScore {
+  id       String @id @db.Uuid
+  matchId  String @db.Uuid
+  userId   String @db.Uuid
+  score    Int?
+  attempts Int?
+  match    Match  @relation(fields: [matchId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matchscore_matchid_foreign")
+  user     User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matchscore_userid_foreign")
+}
+
+model Trivia {
+  id               String             @id @db.Uuid
+  title            String             @unique(map: "trivia_title_unique") @db.VarChar(255)
+  content          Json
+  questionsAmount  Int
+  matches            Match[]
+  categories TriviaOnCategory[]
+}
+
+model TriviaOnCategory {
+  id         String   @id @db.Uuid
+  triviaId   String   @db.Uuid
+  categoryId String   @db.Uuid
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "triviaoncategory_categoryid_foreign")
+  trivia     Trivia   @relation(fields: [triviaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "triviaoncategory_triviaid_foreign")
+}
+
+model User {
+  id                         String        @id @db.Uuid
+  name                       String        @db.VarChar(255)
+  email                      String        @unique(map: "user_email_unique") @db.VarChar(255)
+  matches Match[]       @relation("Match_authorIdToUser")
+  matchesWon Match[]       @relation("Match_winnerIdToUser")
+  scores                 MatchScore[]
+  usersOnMatches                UserOnMatch[]
+}
+
+model UserOnMatch {
+  id      String @id @db.Uuid
+  userId  String @db.Uuid
+  matchId String @db.Uuid
+  match   Match  @relation(fields: [matchId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "useronmatch_matchid_foreign")
+  user    User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "useronmatch_userid_foreign")
+}
