@@ -18,8 +18,6 @@ export class CategoryController {
 
   @Post()
   createCategory(@Body() body: CreateCategoryDto) {
-    console.log(body);
-
     return body;
   }
 

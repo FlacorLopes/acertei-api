@@ -16,7 +16,7 @@ export class TriviaController {
 
   @Post()
   async createTrivia(@Body() data: CreateTriviaDto) {
-    return await this.service.createTrivia({
+    await this.service.createTrivia({
       ...data,
       id: randomUUID(),
       content: data.content as any,
