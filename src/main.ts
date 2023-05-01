@@ -8,10 +8,14 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      transformOptions: {
+        enableImplicitConversion: true,
+      },
     }),
   );
   const prismaService = app.get(PrismaService);
   await prismaService.enableShutdownHooks(app);
-  await app.listen(3000);
+  app.enableCors();
+  await app.listen(3001);
 }
 bootstrap();
