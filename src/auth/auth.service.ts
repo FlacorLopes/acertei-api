@@ -19,7 +19,7 @@ export class AuthService {
       email,
       name,
       id: sub,
-    } = await this.userService.findByEmail(params.email);
+    } = await this.userService.findByEmail(params.email.toLowerCase());
 
     if (password !== params.password) throw new UnauthorizedException();
 

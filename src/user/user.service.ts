@@ -4,7 +4,10 @@ import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class UserService {
-  private readonly users: User[] = [
+  private readonly users: Omit<
+    User,
+    'createdAt' | 'updatedAt' | 'deletedAt'
+  >[] = [
     {
       id: '9cf5027c-3515-4163-b026-1efd1223f702',
       name: 'Flávio Lopes',
@@ -14,7 +17,9 @@ export class UserService {
   ];
   constructor(private prisma: PrismaService) {}
 
-  async findByEmail(email: string): Promise<User | null> {
+  async findByEmail(
+    email: string,
+  ): Promise<Omit<User, 'createdAt' | 'updatedAt' | 'deletedAt'> | null> {
     return this.users.find((u) => u.email === email);
   }
 }

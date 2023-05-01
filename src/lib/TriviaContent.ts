@@ -1,24 +1,18 @@
 import { Type } from 'class-transformer';
 import {
+  ArrayMinSize,
   IsBoolean,
   IsOptional,
   IsString,
-  IsUUID,
   ValidateNested,
 } from 'class-validator';
 
-class TriviaValue {
-  @IsUUID()
-  id: string;
-
+class TriviaValueDto {
   @IsString()
   value: string;
 }
 
-class TriviaColumn {
-  @IsString()
-  key: string;
-
+class TriviaColumnDto {
   @IsString()
   label: string;
 
@@ -30,12 +24,14 @@ class TriviaColumn {
   revealingMask?: string;
 
   @ValidateNested({ each: true })
-  @Type(() => TriviaValue)
-  values: TriviaValue[];
+  @Type(() => TriviaValueDto)
+  @ArrayMinSize(10)
+  values: TriviaValueDto[];
 }
 
-export class TriviaContent {
+export class TriviaContentDto {
   @ValidateNested({ each: true })
-  @Type(() => TriviaColumn)
-  columns: TriviaColumn[];
+  @Type(() => TriviaColumnDto)
+  @ArrayMinSize(1)
+  columns: TriviaColumnDto[];
 }

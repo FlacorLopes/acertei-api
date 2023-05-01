@@ -8,17 +8,20 @@ import {
   ParseUUIDPipe,
   Post,
 } from '@nestjs/common';
+import { CategoryService } from './category.service';
 
 @Controller('category')
 export class CategoryController {
+  constructor(private categoryService: CategoryService) {}
   @Get()
-  getAllCategories() {
-    return [];
+  async getCategories() {
+    await new Promise((resolve) => setTimeout(() => resolve(true), 5000));
+    return this.categoryService.getCategories();
   }
 
   @Post()
   createCategory(@Body() body: CreateCategoryDto) {
-    return body;
+    return this.categoryService.createCategory(body);
   }
 
   @Delete(':id')
