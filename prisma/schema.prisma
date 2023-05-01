@@ -11,6 +11,10 @@ model Category {
   id      String             @id @db.Uuid
   name    String             @unique(map: "category_name_unique") @db.VarChar(30)
   trivias TriviaOnCategory[]
+
+   createdAt      DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  deletedAt      DateTime? @db.Timestamp(6)
 }
 
 model Match {
@@ -23,6 +27,10 @@ model Match {
   winner   User?         @relation("Match_winnerIdToUser", fields: [winnerId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "match_winnerid_foreign")
   scores   MatchScore[]
   users    UserOnMatch[]
+
+   createdAt      DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  deletedAt      DateTime? @db.Timestamp(6)
 }
 
 model MatchScore {
@@ -33,6 +41,10 @@ model MatchScore {
   attempts Int?
   match    Match  @relation(fields: [matchId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matchscore_matchid_foreign")
   user     User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "matchscore_userid_foreign")
+
+   createdAt      DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  deletedAt      DateTime? @db.Timestamp(6)
 }
 
 model Trivia {
@@ -42,6 +54,10 @@ model Trivia {
   questionsAmount Int
   matches         Match[]
   categories      TriviaOnCategory[]
+
+   createdAt      DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  deletedAt      DateTime? @db.Timestamp(6)
 }
 
 model TriviaOnCategory {
@@ -50,6 +66,10 @@ model TriviaOnCategory {
   categoryId String   @db.Uuid
   category   Category @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "triviaoncategory_categoryid_foreign")
   trivia     Trivia   @relation(fields: [triviaId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "triviaoncategory_triviaid_foreign")
+
+   createdAt      DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  deletedAt      DateTime? @db.Timestamp(6)
 }
 
 model User {
@@ -61,6 +81,10 @@ model User {
   matchesWon     Match[]       @relation("Match_winnerIdToUser")
   scores         MatchScore[]
   usersOnMatches UserOnMatch[]
+
+   createdAt      DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  deletedAt      DateTime? @db.Timestamp(6)
 }
 
 model UserOnMatch {
@@ -69,4 +93,8 @@ model UserOnMatch {
   matchId String @db.Uuid
   match   Match  @relation(fields: [matchId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "useronmatch_matchid_foreign")
   user    User   @relation(fields: [userId], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "useronmatch_userid_foreign")
+
+   createdAt      DateTime  @default(now()) @db.Timestamp(6)
+  updatedAt      DateTime  @default(now()) @updatedAt @db.Timestamp(6)
+  deletedAt      DateTime? @db.Timestamp(6)
 }
